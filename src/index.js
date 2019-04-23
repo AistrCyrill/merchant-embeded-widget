@@ -9,13 +9,33 @@ import EventService from './EventService'
 
 (function (window, undefined) {
 
-
-  const buildFrameSrc = ({ baseUrl, key, amount, currency, styling }) => {
+  const buildFrameSrc = ({ baseUrl, key, amount, currency, service = null, service_fields = null, cpi = null, description = null, expires = null, theme = null, locale = null,
+    reference_id = null, metadata = null, lang = null, display = null, style = null, pay_button_label = null }) => {
     const qParams = stringify({
+      // Required params
       amount,
       currency,
-      styling,
-      apiKey: key
+      apiKey: key,
+
+      // Optional params
+      description,
+      expires,
+      locale,
+      reference_id,
+      metadata,
+
+      // Theming, UX
+      display,
+      style,
+      theme,
+      pay_button_label,
+
+      // Different usecase flow params
+      service,
+      service_fields,
+      cpi,
+      lang,
+
     })
     return `${baseUrl}?${qParams}`;
   }
@@ -33,6 +53,7 @@ import EventService from './EventService'
 
     try {
       ow(config, ow.object.exactShape({
+        flow: ow.string,
         selector: ow.string,
         key: ow.string,
         amount: ow.number,
@@ -40,39 +61,91 @@ import EventService from './EventService'
         baseUrl: ow.string,
         styling: ow.optional.object,
         frameId: ow.optional.string,
-        src: ow.optional.string
+        description: ow.optional.string,
+        src: ow.optional.string,
+        service: ow.optional.string,
+        service_fields: ow.optional.array,
+        cpi: ow.optional.string,
+        expires: ow.optional.any(ow.string, ow.number),
+        theme: ow.optional.string,
+        locale: ow.optional.string,
+        reference_id: ow.optional.string,
+
+        metadata: ow.optional.any(ow.object, ow.array),
+
+        lang: ow.optional.string,
+
+        display: ow.optional.object.exactShape({
+          hide_footer: ow.optional.boolean,
+          hide_header: ow.optional.boolean,
+          hide_progress_bar: ow.optional.boolean,
+          hide_method_filter: ow.optional.boolean,
+          hide_lifetime_counter: ow.optional.boolean,
+        }),
+
+        style: ow.optional.object.exactShape({
+          theme: ow.optional.string,
+          font_family: ow.optional.string,
+
+          success_color: ow.optional.string,
+          warning_color: ow.optional.string,
+          danger_color: ow.optional.string,
+          info_color: ow.optional.string,
+
+          primary: ow.optional.string,
+          primary_variant: ow.optional.string,
+          primary_text_color: ow.optional.string,
+          primary_background_color: ow.optional.string,
+          on_primary_color: ow.optional.string,
+
+          secodary: ow.optional.string,
+          secondary_variant: ow.optional.string,
+          secondary_text_color: ow.optional.string,
+          secondary_background_color: ow.optional.string,
+          on_secondary_color: ow.optional.string,
+
+          pay_button_label: ow.optional.string,
+        }),
+
       }))
 
-      if (!config.frameId) {
-        config.frameId = 'payment_widget';
+      if (config.flow === 'iframe') {
+        if (!config.frameId) {
+          config.frameId = 'payment_widget';
+        }
+
+
+        /** We pass config to reinit */
+        const CommunicationService = new EventService(config);
+
+        /** 
+         * POST MESSAGE LISTENERS INITIALIZE
+         */
+        CommunicationService.addEventListener()
+        CommunicationService.bindEventListener('reinit', _reinit);
+        CommunicationService.bindEventListener('delete', _close);
+
+        /**
+         * If already exists iframe with existed ID - he will be rerendered 
+         * */
+        const paymentIframe = document.getElementById(config.frameId);
+        if (paymentIframe) {
+          _reinit(config);
+          return
+        }
+
+        /**
+         * @returns iframe src attribute;
+         */
+        config.src = buildFrameSrc(config);
+        const iFrame = initializeIframe(config);
+        mount(iFrame, document.getElementById(config.selector))
+      } else {
+
+        // Redirect flow
+        const path = buildFrameSrc(config);
+        window.open(path, '_blank')
       }
-
-
-      /** We pass config to reinit */
-      const CommunicationService = new EventService(config);
-
-      /** 
-       * POST MESSAGE LISTENERS INITIALIZE
-       */
-      CommunicationService.addEventListener()
-      CommunicationService.bindEventListener('reinit', _reinit);
-      CommunicationService.bindEventListener('delete', _close);
-
-      /**
-       * If already exists iframe with existed ID - he will be rerendered 
-       * */
-      const paymentIframe = document.getElementById(config.frameId);
-      if (paymentIframe) {
-        _reinit(config);
-        return
-      }
-
-      /**
-       * @returns iframe src attribute;
-       */
-      config.src = buildFrameSrc(config);
-      const iFrame = initializeIframe(config);
-      mount(iFrame, document.getElementById(config.selector))
 
 
 

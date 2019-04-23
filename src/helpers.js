@@ -5,7 +5,7 @@ import qs from 'qs'
  * 
  */
 export const stringify = obj => {
-  const stringifyedQS = qs.stringify(obj);
+  const stringifyedQS = qs.stringify(obj, { skipNulls: true });
   return stringifyedQS;
 };
 

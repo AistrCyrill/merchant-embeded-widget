@@ -8,12 +8,13 @@ import ow from 'ow';
 // Probably not yet  🥴;
 
 (function (window, undefined) {
-  const buildFrameSrc = ({ baseUrl, key, amount, currency, styling }) => {
+  const buildFrameSrc = ({ baseUrl, key, amount, currency, styling, theme }) => {
     const qParams = stringify({
       amount,
       currency,
       styling,
-      apiKey: key
+      apiKey: key,
+      theme
     })
     return `${baseUrl}?${qParams}`;
   }
@@ -37,7 +38,8 @@ import ow from 'ow';
         currency: ow.string,
         baseUrl: ow.string,
         styling: ow.optional.object,
-        frameId: ow.optional.string
+        frameId: ow.optional.string,
+        theme: ow.optional.string
       }))
 
       if (!config.frameId) {

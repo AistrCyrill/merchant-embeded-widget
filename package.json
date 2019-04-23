@@ -1,10 +1,13 @@
 {
+  "name": "@paycore/merchant-widget-js",
+  "version": "0.1.2",
+  "main": "dist/merchantWidget.umd.min.js",
   "scripts": {
     "dev": "webpack --watch --colors --progress",
     "build": "webpack",
     "dev:serve": "webpack-dev-server",
     "parcel:run": "parcel ./demo/index.html",
-    "test":  "testcafe chrome ./tests/e2e/init.js"
+    "test": "testcafe chrome ./tests/e2e/init.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",
