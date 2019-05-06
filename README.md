@@ -5,7 +5,7 @@
 
 #Initializing iframe on page.
 
-1) Get iframe widget from CDN. (AMD will be released later);
+1) Get iframe widget from CDN.
 
 ```html
 <script src="https://unpkg.com/@paycore/merchant-widget-js@0.1.4/dist/merchantWidget.umd.min.js"></script>
