@@ -3,7 +3,26 @@
 
 
 
-Initialize iframe on page.
+#Initializing iframe on page.
+
+1) Get iframe widget from CDN. (AMD will be released later);
+
+```html
+<script src="https://unpkg.com/@paycore/merchant-widget-js@0.1.4/dist/merchantWidget.umd.min.js"></script>
+```
+
+2) Init widget on your client page:
+```javascript
+window.widget.init({
+    selector: "HTML_ID_SELECTOR_TO_INSERT_WIDGET_INTO",
+    flow: "iframe",
+    public_key: "YOUR_PUBLIC_KEY",
+    amount: "AMOUNT_OF_INVOICE",
+    currency: "USD",
+    baseUrl: "URL_OF_YOUR_HPP"
+  });
+```
+
 ### Parameters
 - `options` **[Object][19]** Required
 - `options.selector` **[String][20]** Selector on client page you wnat insert iframe to. Required.
