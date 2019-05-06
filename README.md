@@ -1,5 +1,5 @@
 
-##An client third-party inteface to init and render Mechant HPP to an a page with custom style options.
+##An client third-party inteface to init and render Mechant HPP to an a clint page with custom options.
 
 
 
