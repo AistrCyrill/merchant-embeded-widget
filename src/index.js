@@ -9,13 +9,13 @@ import EventService from './EventService'
 
 (function (window, undefined) {
 
-  const buildFrameSrc = ({ baseUrl, key, amount, currency, service = null, service_fields = null, cpi = null, description = null, expires = null, theme = null, locale = null,
+  const buildFrameSrc = ({ baseUrl, public_key, amount, currency, service = null, service_fields = null, cpi = null, description = null, expires = null, theme = null, locale = null,
     reference_id = null, metadata = null, lang = null, display = null, style = null, pay_button_label = null }) => {
     const qParams = stringify({
       // Required params
       amount,
       currency,
-      apiKey: key,
+      public_key,
 
       // Optional params
       description,
@@ -55,7 +55,7 @@ import EventService from './EventService'
       ow(config, ow.object.exactShape({
         flow: ow.string,
         selector: ow.string,
-        key: ow.string,
+        public_key: ow.string,
         amount: ow.number,
         currency: ow.string,
         baseUrl: ow.string,
@@ -98,13 +98,14 @@ import EventService from './EventService'
           primary_background_color: ow.optional.string,
           on_primary_color: ow.optional.string,
 
-          secodary: ow.optional.string,
+          secondary: ow.optional.string,
           secondary_variant: ow.optional.string,
           secondary_text_color: ow.optional.string,
           secondary_background_color: ow.optional.string,
           on_secondary_color: ow.optional.string,
 
           pay_button_label: ow.optional.string,
+          show_method_logo: ow.optional.boolean
         }),
 
       }))
@@ -124,6 +125,7 @@ import EventService from './EventService'
         CommunicationService.addEventListener()
         CommunicationService.bindEventListener('reinit', _reinit);
         CommunicationService.bindEventListener('delete', _close);
+        CommunicationService.bindEventListener('close', _close);
 
         /**
          * If already exists iframe with existed ID - he will be rerendered 
