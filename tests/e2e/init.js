@@ -5,21 +5,22 @@ import { Selector, ClientFunction } from 'testcafe'
 import ListPage from './pages/MethodsList'
 
 const APP_TESTING_BASE_URL = process.env.APP_TESTING_BASE_URL || 'http://localhost:1234';
+const IFRAME_SELECTOR = process.env.IFRAME_SELECTOR || "app";
 const HPP_BASE_URL = process.env.HPP_BASE_URL || 'http://localhost:8015/hpp';
-
-const mlPage = new ListPage()
+const HPP_API_KEY = process.env.HPP_API_KEY || 'pk_test_yNznq07p7MChOL8shs7WT3Yat6ZnlqyXq8ep6WKF998';
+const mlPage = new ListPage();
 
 const intitWidget = ClientFunction(() => {
   window.widget.init({
-    selector: "app",
+    selector: IFRAME_SELECTOR,
     flow: "iframe",
-    public_key: "pk_test_yNznq07p7MChOL8shs7WT3Yat6ZnlqyXq8ep6WKF998",
+    public_key: HPP_API_KEY,
     amount: 100,
     currency: "USD",
     baseUrl: HPP_BASE_URL
   });
 }, {
-    dependencies: { HPP_BASE_URL }
+    dependencies: { HPP_BASE_URL, HPP_API_KEY, IFRAME_SELECTOR }
   });
 
 
