@@ -1,4 +1,4 @@
-const libName = "merchantWidget";
+const libName = "paymentWidget";
 
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");

@@ -10,8 +10,8 @@ class EventService {
   }
 
 
-  bindEventListener(eventName, hanlder) {
-    this.listeners[eventName] = hanlder;
+  bindEventListener(eventName, handler) {
+    this.listeners[eventName] = handler;
   }
 
   listener(event) {
