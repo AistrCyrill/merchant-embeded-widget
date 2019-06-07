@@ -139,9 +139,18 @@ import EventService from "./EventService";
          * POST MESSAGE LISTENERS INITIALIZE, works only with POST MESSAGES FROM IFRAME
          */
         window.payment_widget.CommunicationService.addEventListener();
-        window.payment_widget.CommunicationService.bindEventListener("reinit", _reinit);
-        window.payment_widget.CommunicationService.bindEventListener("delete", _close);
-        window.payment_widget.CommunicationService.bindEventListener("close", _close);
+        window.payment_widget.CommunicationService.bindEventListener(
+          "reinit",
+          _reinit,
+        );
+        window.payment_widget.CommunicationService.bindEventListener(
+          "delete",
+          _close,
+        );
+        window.payment_widget.CommunicationService.bindEventListener(
+          "close",
+          _close,
+        );
 
         /**
          * If already exists iframe with existed ID - he will be rerenderer
@@ -182,11 +191,12 @@ import EventService from "./EventService";
     return;
   };
 
-  const _bindEventListener = (event, callback) =>{
-    console.log("EVENT", event, callback,  window.payment_widget.CommunicationService);
-    window.payment_widget.CommunicationService.bindEventListener(event, callback)
+  const _bindEventListener = (event, callback) => {
+    window.payment_widget.CommunicationService.bindEventListener(
+      event,
+      callback,
+    );
   };
-
 
   const initializeIframe = props =>
     render({
