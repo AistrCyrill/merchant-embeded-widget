@@ -10,7 +10,7 @@ import EventService from "./EventService";
 (function(window, undefined) {
   const buildFrameSrc = ({
     // FIXME: move it to upper function
-    baseUrl = "https://com-dev.paycore.io/hpp",
+    BASE_URL = "https://com.paycore.io/hpp",
     public_key,
     amount,
     currency,
@@ -53,7 +53,7 @@ import EventService from "./EventService";
       cpi,
       lang,
     });
-    return `${baseUrl}?${qParams}`;
+    return `${BASE_URL}?${qParams}`;
   };
   /*
    * Widget initialize method:
@@ -70,14 +70,15 @@ import EventService from "./EventService";
       ow(
         config,
         ow.object.exactShape({
-          flow: ow.string,
-          selector: ow.string,
+          BASE_URL: ow.optional.string,
           public_key: ow.string,
           amount: ow.number,
           currency: ow.string,
-          baseUrl: ow.optional.string,
+
+          flow: ow.string,
+          selector: ow.string,
           styling: ow.optional.object,
-          frameId: ow.optional.string,
+          frame_id: ow.optional.string,
           description: ow.optional.string,
           src: ow.optional.string,
           service: ow.optional.string,
@@ -88,6 +89,7 @@ import EventService from "./EventService";
           locale: ow.optional.string,
           reference_id: ow.optional.string,
           language: ow.optional.string,
+          logo: ow.optional.string,
 
           metadata: ow.optional.any(ow.object, ow.array),
 
@@ -128,8 +130,8 @@ import EventService from "./EventService";
         }),
       );
       if (config.flow === "iframe") {
-        if (!config.frameId) {
-          config.frameId = "payment_widget";
+        if (!config.frame_id) {
+          config.frame_id = "payment_widget";
         }
 
         /** We pass config to reinit */
@@ -156,7 +158,7 @@ import EventService from "./EventService";
          * If already exists iframe with existed ID - he will be rerenderer
          * */
 
-        const paymentIframe = document.getElementById(config.frameId);
+        const paymentIframe = document.getElementById(config.frame_id);
         if (paymentIframe) {
           _reinit(config);
           return;
@@ -179,7 +181,7 @@ import EventService from "./EventService";
   };
 
   const _close = config => {
-    const frameToClose = document.getElementById(config.frameId);
+    const frameToClose = document.getElementById(config.frame_id);
     if (frameToClose) {
       frameToClose.remove();
     }
@@ -201,7 +203,7 @@ import EventService from "./EventService";
   const initializeIframe = props =>
     render({
       attrs: {
-        id: props.frameId,
+        id: props.frame_id,
         src: props.src || "",
         width: "100%",
         height: "100%",
