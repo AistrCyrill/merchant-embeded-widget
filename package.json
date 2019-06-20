@@ -1,6 +1,6 @@
 {
   "name": "@paycore/payment-widget-js",
-  "version": "0.1.9",
+  "version": "0.1.93",
   "main": "dist/paymentWidget.umd.min.js",
   "scripts": {
     "dev": "webpack --watch --colors --progress",
@@ -8,7 +8,8 @@
     "dev:serve": "webpack-dev-server",
     "parcel:run": "parcel ./demo/index.html",
     "test": "testcafe chrome ./tests/e2e/init.js",
-    "test:headless": "testcafe chrome:headless ./tests/e2e/init.js"
+    "test:headless": "testcafe chrome:headless ./tests/e2e/init.js",
+    "size": "yarn build && size-limit"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",
@@ -23,12 +24,19 @@
     "prettier": "^1.16.4",
     "rollup": "^1.3.2",
     "sinon": "^7.2.4",
+    "size-limit": "^1.3.7",
     "testcafe": "^1.1.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.2.1",
     "webpack-node-externals": "^1.7.2"
   },
+  "size-limit": [
+    {
+      "path": "./dist/paymentWidget.umd.js",
+      "limit": "9 KB"
+    }
+  ],
   "dependencies": {
     "ow": "^0.12.0",
     "qs": "^6.6.0"

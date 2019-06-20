@@ -3,10 +3,12 @@ class EventService {
   // Probably not yet  🥴;
 
   constructor(config) {
-    this.addEventListener = this.addEventListener.bind(this)
+    this.addEventListener = this.addEventListener.bind(this);
     this.listener = this.listener.bind(this);
-    this.listeners = {}
+    this.listeners = {};
     this.config = config;
+
+    this.addEventListener();
   }
 
 
