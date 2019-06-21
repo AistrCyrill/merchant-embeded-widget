@@ -17,7 +17,6 @@ import EventService from "./EventService";
   'use strict';
 
   const buildFrameSrc = ({
-    // FIXME: move it to upper function
     base_url = "https://com.paycore.io/hpp",
     public_key,
     amount,
@@ -70,12 +69,15 @@ import EventService from "./EventService";
    *
    */
 
-  const widget = function() {
+  // TODO: we can make it as Class, and create singleton with Symbols;
+  // https://medium.com/@frontman/%D1%80%D0%B5%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F-%D0%BE%D0%B4%D0%B8%D0%BD%D0%BE%D1%87%D0%BA%D0%B8-%D0%B2-js-20d64da9d44b
+
+  const Widget = function() {
     this.config = {};
 
     this.init = (config) => {
       this.config = config;
-      _init(config);
+      _init({target: 'iframe', ...config});
 
       if(config.handlers){
         for(const [k,v] of Object.entries(config.handlers) ) {
@@ -100,7 +102,14 @@ import EventService from "./EventService";
     };
 
     this.CommunicationService = new EventService(this.config);
-    this.bindEventListener('rendered', () => {})
+    this.bindEventListener('rendered', () => {});
+    this.bindEventListener('return', this.close());
+
+
+    // If we got HPPconfig in global scope - make auto init;
+    if(window.HPPConfig) {
+      this.init(window.HPPConfig)
+    };
   };
 
   const _init = config => {
@@ -108,15 +117,16 @@ import EventService from "./EventService";
       ow(
         config,
         ow.object.exactShape({
-          target: ow.string,
-          selector_id: ow.optional.string,
-          frame_id: ow.optional.string,
-
-          base_url: ow.optional.string,
           public_key: ow.string,
-
           amount: ow.number,
           currency: ow.string,
+
+          target: ow.optional.string,
+          selector_id: ow.optional.string,
+          frame_id: ow.optional.string,
+          base_url: ow.optional.string,
+
+
           description: ow.optional.string,
           reference_id: ow.optional.string,
 
@@ -243,5 +253,5 @@ import EventService from "./EventService";
     });
 
 
-  window.payment_widget = new widget();
+  window.payment_widget = new Widget();
 })(window);
