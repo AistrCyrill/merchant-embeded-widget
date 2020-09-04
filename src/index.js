@@ -16,7 +16,7 @@ import EventService from "./EventService";
   "use strict";
 
   const buildFrameSrc = ({
-    base_url = "http://localhost:8015/hpp",
+    base_url = "https://com.paycore.io/hpp",
     public_key,
     amount,
     currency,
