@@ -12,12 +12,11 @@ import EventService from "./EventService";
 // UPD.
 // And we need it.
 // TODO: Refactor everything to class in UMD.
-
 (function(window, undefined) {
-  'use strict';
+  "use strict";
 
   const buildFrameSrc = ({
-    base_url = "https://com.paycore.io/hpp",
+    base_url = "http://localhost:8015/hpp",
     public_key,
     amount,
     currency,
@@ -29,6 +28,7 @@ import EventService from "./EventService";
     reference_id = null,
     metadata = null,
     language = null,
+    customer = null,
     display = null,
     style = null,
     pay_button_label = null,
@@ -45,6 +45,7 @@ import EventService from "./EventService";
       reference_id,
       metadata,
       language,
+      customer,
 
       // Theming, UX
       display,
@@ -58,7 +59,6 @@ import EventService from "./EventService";
     });
     return `${base_url}?${qParams}`;
   };
-
 
   /*
    * Widget initialize method:
@@ -77,42 +77,38 @@ import EventService from "./EventService";
 
     this.init = (config) => {
       this.config = config;
-      _init({target: 'iframe', ...config});
+      _init({ target: "iframe", ...config });
 
-      if(config.handlers){
-        for(const [k,v] of Object.entries(config.handlers) ) {
+      if (config.handlers) {
+        for (const [k, v] of Object.entries(config.handlers)) {
           this.bindEventListener(k, v);
         }
       }
     };
 
     this.reinit = () => {
-      _reinit(this.config)
+      _reinit(this.config);
     };
 
     this.close = () => {
-      _close(this.config)
+      _close(this.config);
     };
 
     this.bindEventListener = (event, callback) => {
-      this.CommunicationService.bindEventListener(
-          event,
-          callback,
-      );
+      this.CommunicationService.bindEventListener(event, callback);
     };
 
     this.CommunicationService = new EventService(this.config);
-    this.bindEventListener('rendered', () => {});
-    this.bindEventListener('return', this.close());
-
+    this.bindEventListener("rendered", () => {});
+    this.bindEventListener("return", this.close());
 
     // If we got HPPconfig in global scope - make auto init;
-    if(window.HPPConfig) {
-      this.init(window.HPPConfig)
-    };
+    if (window.HPPConfig) {
+      this.init(window.HPPConfig);
+    }
   };
 
-  const _init = config => {
+  const _init = (config) => {
     try {
       ow(
         config,
@@ -126,10 +122,8 @@ import EventService from "./EventService";
           frame_id: ow.optional.string,
           base_url: ow.optional.string,
 
-
           description: ow.optional.string,
           reference_id: ow.optional.string,
-
 
           service: ow.optional.string,
           service_fields: ow.optional.array,
@@ -141,7 +135,6 @@ import EventService from "./EventService";
           metadata: ow.optional.any(ow.object, ow.array),
 
           handlers: ow.optional.object,
-
 
           display: ow.optional.object.exactShape({
             hide_footer: ow.optional.boolean,
@@ -181,7 +174,7 @@ import EventService from "./EventService";
             secondary: ow.optional.string,
             secondary_variant: ow.optional.string,
             background: ow.optional.string,
-            surface:ow.optional.string,
+            surface: ow.optional.string,
 
             error: ow.optional.string,
             on_primary: ow.optional.string,
@@ -191,11 +184,19 @@ import EventService from "./EventService";
             on_surface: ow.optional.string,
             on_error: ow.optional.string,
           }),
-        }),
+
+          customer: ow.optional.object.exactShape({
+            reference_id: ow.string,
+            email: ow.optional.string,
+            name: ow.optional.string,
+            metadata: ow.optional.any(ow.object, ow.array),
+          }),
+        })
       );
+
       if (config.target === "iframe") {
-        if(!config.selector_id) {
-          config.selector_id = "payment_widget"
+        if (!config.selector_id) {
+          config.selector_id = "payment_widget";
         }
         if (!config.frame_id) {
           config.frame_id = "payment_frame";
@@ -215,7 +216,7 @@ import EventService from "./EventService";
          * @returns iframe src attribute;
          */
         let src = buildFrameSrc(config);
-        const iFrame = initializeIframe({src, frame_id: config.frame_id});
+        const iFrame = initializeIframe({ src, frame_id: config.frame_id });
         mount(iFrame, document.getElementById(config.selector_id));
       } else {
         // Redirect flow
@@ -223,25 +224,24 @@ import EventService from "./EventService";
         window.open(path, "_blank");
       }
     } catch (e) {
-      throw (e);
+      throw e;
     }
   };
 
-  const _close = config => {
+  const _close = (config) => {
     const frameToClose = document.getElementById(config.frame_id);
     if (frameToClose) {
       frameToClose.remove();
     }
   };
 
-  const _reinit = config => {
+  const _reinit = (config) => {
     _close(config);
     _init(config);
     return;
   };
 
-
-  const initializeIframe = props =>
+  const initializeIframe = (props) =>
     render({
       attrs: {
         id: props.frame_id,
@@ -251,7 +251,6 @@ import EventService from "./EventService";
         frameborder: "none",
       },
     });
-
 
   window.payment_widget = new Widget();
 })(window);
