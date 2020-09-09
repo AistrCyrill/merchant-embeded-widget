@@ -1,6 +1,6 @@
 {
   "name": "@paycore/payment-widget-js",
-  "version": "0.1.93",
+  "version": "0.1.94",
   "main": "dist/paymentWidget.umd.min.js",
   "scripts": {
     "dev": "webpack --watch --colors --progress",
