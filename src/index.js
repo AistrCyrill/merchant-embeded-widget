@@ -188,6 +188,7 @@ import EventService from "./EventService";
           customer: ow.optional.object.exactShape({
             reference_id: ow.string,
             email: ow.optional.string,
+            phone: ow.optional.string,
             name: ow.optional.string,
             metadata: ow.optional.any(ow.object, ow.array),
           }),
