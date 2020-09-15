@@ -55,3 +55,13 @@ Some of variables will be generated automatically based on their related colors 
   <!-- - `options.style.success_color` **[Object]** Color of success element 'notify' -->
 - `options.style.primary` **[Object]** Primary/Accent color
 - `options.style.primary_variant` **[Object]** - Based on primary color, or can be passed by you. If primary color will be dark - then this variable will be lighter. Used on most important UI components (stepper,buttons)
+
+## Customer info
+
+If customer data is provided, it will be passed in the payment processing request.
+
+- `options.customer.reference_id` **[String]** Unique identifier of the customer. Must always have to be in the customer data object
+- `options.customer.email` **[Boolean]** Customer email (Optional)
+- `options.customer.name` **[Boolean]** Customer name (Optional)
+- `options.customer.phone` **[Boolean]** Customer phone (Optional)
+- `options.customer.metadata` **[Object]** Key-value map to provide additional user info (Optional)
