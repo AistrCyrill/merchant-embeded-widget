@@ -191,6 +191,14 @@ import EventService from "./EventService";
             phone: ow.optional.string,
             name: ow.optional.string,
             metadata: ow.optional.any(ow.object, ow.array),
+            address: ow.optional.object.exactShape({
+              country: ow.optional.string,
+              city: ow.optional.string,
+              post_code: ow.optional.string,
+              region: ow.optional.string,
+              street: ow.optional.string,
+              full_address: ow.optional.string
+            })
           }),
         })
       );
